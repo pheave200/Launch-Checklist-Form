@@ -1,21 +1,72 @@
 // Write your JavaScript code here!
 window.addEventListener("load", function() {
    let form = document.querySelector("form");
+   let pilotName = document.querySelector("input[name=pilotName]");
+   let copilotName = document.querySelector("input[name=copilotName]");
+   let fuelLevel = document.querySelector("input[name=fuelLevel]");
+   let cargoMass = document.querySelector("input[name=cargoMass]");
+   let status = document.getElementById("launchStatusCheck");
+   let launchStatus = document.getElementById("launchStatus");
+   let faultyItems = document.getElementById("faultyItems");
    form.addEventListener("submit", function(event) {
       event.preventDefault();
-      let pilotName = document.querySelector("input[name=pilotName]");
-      let copilotName = document.querySelector("input[name=copilotName]");
-      let fuelLevel = document.querySelector("input[name=fuelLevel]");
-      let cargoMass = document.querySelector("input[name=cargoMass]");
+      status.visibility = "visible";
       if(pilotName.value==="" || copilotName.value==="" || fuelLevel.value==="" || cargoMass.value==="") { 
-         alert("All Fields Are Required!");  
-      }
-      if(fuelLevel.value<10000 && cargoMass.value>10000) {
-         let div = document.getElementById("faultyItems")
-         div.innerHTML = `
-            
+         alert("All Fields Are Required!");
+      } else if( isNaN(Number(fuelLevel.value)) || isNaN(Number(cargoMass.value))) {
+         alert("Fuel amd Mass must be a number!")
+      } else if(fuelLevel.value>=10000 && cargoMass.value<10000) {
+         status.innerHTML = `
+            <h2 id="launchStatus">Shuttle is Ready for Launch!</h2>
+            <div  id="faultyItems">
+               <ol>
+                  <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
+                  <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
+                  <li id="fuelStatus">Fuel level high enough for launch</li>
+                  <li id="cargoStatus">Cargo mass low enough for launch</li>
+               </ol>
+            </div>
          `;
-      }
+      } else if (fuelLevel.value<10000 && cargoMass>=10000) {
+         luanchStatus.style.color = "red";
+         status.innerHTML = `
+            <h2 id="launchStatus">Shuttle Cannot Launch!</h2>
+            <div  id="faultyItems">
+               <ol>
+                  <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
+                  <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
+                  <li id="fuelStatus">Fuel level is to low to launch!</li>
+                  <li id="cargoStatus">Cargo mass is to high launch!</li>
+               </ol>
+            </div>
+         `;
+         
+      } else if (fuelLevel.value<10000) {
+         status.innerHTML = `
+            <h2 id="launchStatus">Shuttle Cannot Launch!</h2>
+            <div  id="faultyItems">
+               <ol>
+                  <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
+                  <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
+                  <li id="fuelStatus">Fuel level is to low to launch!</li>
+                  <li id="cargoStatus">Cargo mass low enough for launch</li>
+               </ol>
+            </div>
+         `;
+      } else if (cargoMass.value>10000) {
+         status.innerHTML = `
+            <h2 id="launchStatus">Shuttle Cannot Launch!</h2>
+            <div  id="faultyItems">
+               <ol>
+                  <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
+                  <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
+                  <li id="fuelStatus">Fuel level is high enough to launch</li>
+                  <li id="cargoStatus">Cargo mass is to low to launch!</li>
+               </ol>
+            </div>
+         `;
+      }   
+
    });
    fetch("https://handlers.education.launchcode.org/static/planets.json").then(function(response) {
       response.json().then(function(json) {
@@ -35,7 +86,7 @@ window.addEventListener("load", function() {
    });
 
 
-})
+});
 
 
 /* This block of code shows how to format the HTML once you fetch some planetary JSON!
