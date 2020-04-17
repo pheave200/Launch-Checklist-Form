@@ -6,6 +6,9 @@ div {
     text-align: left;
 }
 
+html {
+    background-image:url("https://images.designtrends.com/wp-content/uploads/2015/12/10070839/Space-Backgrounds24.jpg") ;
+}
 #faultyItems {
     visibility: visible;
 }
