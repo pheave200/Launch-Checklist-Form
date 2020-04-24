@@ -1,71 +1,49 @@
-// Write your JavaScript code here!
-window.addEventListener("load", function() {
+window.addEventListener('load', function (){
    let form = document.querySelector("form");
-   let pilotName = document.querySelector("input[name=pilotName]");
-   let copilotName = document.querySelector("input[name=copilotName]");
-   let fuelLevel = document.querySelector("input[name=fuelLevel]");
-   let cargoMass = document.querySelector("input[name=cargoMass]");
-   let status = document.getElementById("launchStatusCheck");
-   let launchStatus = document.getElementById("launchStatus");
-   let faultyItems = document.getElementById("faultyItems");
+   let pilotNameInput = document.querySelector('input[name=pilotName]');
+   let copilotNameInput = document.querySelector('input[name=copilotName]');
+   let fuelLevelInput = document.querySelector('input[name=fuelLevel]');
+   let cargoMassInput = document.querySelector('input[name=cargoMass]');
+   let faultyItems = document.getElementById('faultyItems')
+   let pilotStatus = document.getElementById('pilotStatus');
+   let copilotStatus = document.getElementById('copilotStatus');
+   let fuelStatus = document.getElementById('fuelStatus');
+   let cargoStatus = document.getElementById('cargoStatus');
+   let launchStatus = document.getElementById('launchStatus');
+   let planetData = document.getElementById('planetData')
+   
    form.addEventListener("submit", function(event) {
       event.preventDefault();
-      status.visibility = "visible";
-      if(pilotName.value==="" || copilotName.value==="" || fuelLevel.value==="" || cargoMass.value==="") { 
-         alert("All Fields Are Required!");
-      } else if( isNaN(Number(fuelLevel.value)) || isNaN(Number(cargoMass.value))) {
-         alert("Fuel amd Mass must be a number!")
-      } else if(fuelLevel.value>=10000 && cargoMass.value<10000) {
-         status.innerHTML = `
-            <h2 id="launchStatus">Shuttle is Ready for Launch!</h2>
-            <div  id="faultyItems">
-               <ol>
-                  <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
-                  <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
-                  <li id="fuelStatus">Fuel level high enough for launch</li>
-                  <li id="cargoStatus">Cargo mass low enough for launch</li>
-               </ol>
-            </div>
-         `;
-      } else if (fuelLevel.value<10000 && cargoMass>=10000) {
-         luanchStatus.style.color = "red";
-         status.innerHTML = `
-            <h2 id="launchStatus">Shuttle Cannot Launch!</h2>
-            <div  id="faultyItems">
-               <ol>
-                  <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
-                  <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
-                  <li id="fuelStatus">Fuel level is to low to launch!</li>
-                  <li id="cargoStatus">Cargo mass is to high launch!</li>
-               </ol>
-            </div>
-         `;
-         
-      } else if (fuelLevel.value<10000) {
-         status.innerHTML = `
-            <h2 id="launchStatus">Shuttle Cannot Launch!</h2>
-            <div  id="faultyItems">
-               <ol>
-                  <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
-                  <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
-                  <li id="fuelStatus">Fuel level is to low to launch!</li>
-                  <li id="cargoStatus">Cargo mass low enough for launch</li>
-               </ol>
-            </div>
-         `;
-      } else if (cargoMass.value>10000) {
-         status.innerHTML = `
-            <h2 id="launchStatus">Shuttle Cannot Launch!</h2>
-            <div  id="faultyItems">
-               <ol>
-                  <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
-                  <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
-                  <li id="fuelStatus">Fuel level is high enough to launch</li>
-                  <li id="cargoStatus">Cargo mass is to low to launch!</li>
-               </ol>
-            </div>
-         `;
-      }   
+      
+      if (pilotNameInput.value === "" || copilotNameInput.value ==="" || fuelLevelInput.value === "" || cargoMassInput.value === ""){
+         alert('All fields required!');
+      } else if (isNaN(fuelLevelInput.value) || isNaN(cargoMassInput.value)){
+         alert('Please enter a numeric value for fuel Level and cargo mass.');
+      } else if (!isNaN(pilotNameInput.value) || !isNaN(copilotNameInput.value)) {
+         alert('Numeric entries are not allow in th Pilot or Copilot fields.');
+      } else {
+         faultyItems.style.visibility = 'visible'
+         pilotStatus.innerHTML = `Pilot ${pilotNameInput.value} is ready for launch`
+         copilotStatus.innerHTML = `Co-pilot ${copilotNameInput.value} is ready for launch`
+
+         if (fuelLevelInput.value <= 10000){
+            fuelStatus.innerHTML = "Fuel level is too low for launch.";
+         } else {
+            fuelStatus.innerHTML = "Fuel level is ready for launch";
+         }
+         if (cargoMassInput.value >= 10000){
+            cargoStatus.innerHTML = "Cargo mass is too high for launch";
+         } else {
+            cargoStatus.innerHTML = "Cargo mass is low enough for launch";
+         }
+         if (fuelLevelInput.value <= 10000|| cargoMassInput.value >= 10000){
+            launchStatus.innerHTML = "Shuttle not ready to launch";
+            launchStatus.style.color = "red";
+         } else {
+            launchStatus.innerHTML = "Shuttle ready for launch";
+            launchStatus.style.color = "green";
+         }
+      }
 
    });
    fetch("https://handlers.education.launchcode.org/static/planets.json").then(function(response) {
@@ -87,16 +65,3 @@ window.addEventListener("load", function() {
 
 
 });
-
-
-/* This block of code shows how to format the HTML once you fetch some planetary JSON!
-<h2>Mission Destination</h2>
-<ol>
-   <li>Name: ${}</li>
-   <li>Diameter: ${}</li>
-   <li>Star: ${}</li>
-   <li>Distance from Earth: ${}</li>
-   <li>Number of Moons: ${}</li>
-</ol>
-<img src="${}">
-*/
